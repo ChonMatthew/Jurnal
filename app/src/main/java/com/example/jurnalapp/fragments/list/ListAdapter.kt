@@ -11,6 +11,9 @@ import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.CustomRowBinding
 import com.example.jurnalapp.databinding.FragmentAddBinding
 import com.example.jurnalapp.model.Entry
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
 
@@ -20,6 +23,8 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val title_txt: TextView = itemBinding.titleTxt
         val subtitle_txt: TextView = itemBinding.subtitleTxt
         val content_txt: TextView = itemBinding.contentTxt
+        val selectedDateText: TextView = itemBinding.selectedDateText
+        val selectedTimeText: TextView = itemBinding.selectedTimeText
         val rowLayout: ConstraintLayout = itemBinding.rowLayout
     }
 
@@ -38,8 +43,17 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         holder.subtitle_txt.text = currentItem.subtitle
         holder.content_txt.text = currentItem.content
 
+        // Format date and time
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        val date = Date(currentItem.date)
+        val time = Date(currentItem.time)
+        holder.selectedDateText.text = dateFormat.format(date)
+        holder.selectedTimeText.text = timeFormat.format(time)
+
         holder.rowLayout.setOnClickListener {
-            val action = ListFragmentDirections.actionListFragmentToUpdateFragment(currentItem)
+            val action = ListFragmentDirections.actionListFragmentToEntryDetailFragment(currentItem)
             holder.itemView.findNavController().navigate(action)
         }
     }

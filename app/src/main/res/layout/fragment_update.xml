@@ -12,6 +12,7 @@
         android:id="@+id/updateTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="text"
         android:hint="Entry Title"
@@ -19,7 +20,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/updateSubtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/date_txt" />
 
     <EditText
         android:id="@+id/updateSubtitle"
@@ -47,6 +48,67 @@
         app:layout_constraintBottom_toTopOf="@id/UpdateButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/updateSubtitle" />
+
+    <TextView
+        android:id="@+id/date_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="12sp"
+        android:text="Date:"
+        app:layout_constraintTop_toBottomOf="@id/updateDateButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/entryDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="4dp"
+        android:textSize="12sp"
+        android:text="02/02/2024"
+        app:layout_constraintTop_toBottomOf="@id/updateDateButton"
+        app:layout_constraintStart_toEndOf="@id/date_txt" />
+
+    <TextView
+        android:id="@+id/time_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:textSize="12sp"
+        android:text="Time:"
+        app:layout_constraintTop_toBottomOf="@id/updateTimeButton"
+        app:layout_constraintEnd_toStartOf="@id/entryTimeText" />
+
+    <TextView
+        android:id="@+id/entryTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="4dp"
+        android:textSize="12sp"
+        android:text="12:00 PM"
+        app:layout_constraintTop_toBottomOf="@id/updateTimeButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/updateDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Date"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/updateTitle"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/updateTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Time"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/updateTitle"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/UpdateButton"

@@ -54,7 +54,7 @@ class ListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTex
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.delete_menu, menu)
+        inflater.inflate(R.menu.search_menu, menu)
 
         val search = menu.findItem(R.id.menu_search)
         val searchView = search?.actionView as? androidx.appcompat.widget.SearchView
@@ -62,25 +62,25 @@ class ListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTex
         searchView?.setOnQueryTextListener(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.menu_delete) {
-            deleteAllEntrys()
-        }
-        @Suppress("DEPRECATION")
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        if(item.itemId == R.id.menu_delete) {
+//            deleteAllEntrys()
+//        }
+//        @Suppress("DEPRECATION")
+//        return super.onOptionsItemSelected(item)
+//    }
 
-    private fun deleteAllEntrys() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setPositiveButton("Yes") {_,_ ->
-            mEntryViewModel.deleteAllEntries()
-            Toast.makeText(requireContext(), "Successfully Cleared", Toast.LENGTH_LONG).show()
-        }
-        builder.setNegativeButton("No") { _, _ -> }
-        builder.setTitle("Clear All Entries?")
-        builder.setMessage("Are You Sure You Want To Clear Your Jurnal?")
-        builder.create().show()
-    }
+//    private fun deleteAllEntrys() {
+//        val builder = AlertDialog.Builder(requireContext())
+//        builder.setPositiveButton("Yes") {_,_ ->
+//            mEntryViewModel.deleteAllEntries()
+//            Toast.makeText(requireContext(), "Successfully Cleared", Toast.LENGTH_LONG).show()
+//        }
+//        builder.setNegativeButton("No") { _, _ -> }
+//        builder.setTitle("Clear All Entries?")
+//        builder.setMessage("Are You Sure You Want To Clear Your Jurnal?")
+//        builder.create().show()
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

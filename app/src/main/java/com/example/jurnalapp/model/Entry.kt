@@ -13,4 +13,6 @@ data class Entry(
     val title: String,
     val subtitle: String,
     val content: String,
+    val date: Long,
+    val time: Long
 ): Parcelable

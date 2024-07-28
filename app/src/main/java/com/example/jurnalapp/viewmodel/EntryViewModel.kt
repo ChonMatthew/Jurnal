@@ -49,4 +49,11 @@ class EntryViewModel(application: Application): AndroidViewModel(application) {
     fun searchDatabase(searchQuery: String): LiveData<List<Entry>> {
         return repository.searchDatabase(searchQuery).asLiveData()
     }
+
+    fun updateEntryWithDateTime(entry: Entry, date: Long, time: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedEntry = entry.copy(date = date, time = time)
+            repository.updateEntry(updatedEntry)
+        }
+    }
 }

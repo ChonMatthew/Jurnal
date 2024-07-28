@@ -7,37 +7,99 @@
     android:id="@+id/rowLayout"
     android:padding="24dp">
 
-    <TextView
-        android:id="@+id/title_txt"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dinner Date"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/subtitle_txt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/subtitle_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Quick Date with Mom"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/content_txt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_txt" />
-
-    <TextView
-        android:id="@+id/content_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="20dp"
-        android:text="Enjoyed Dinner at Labodega in Empire Shopping Mall"
-        android:textSize="14sp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subtitle_txt" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/title_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dinner Date"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/subtitle_txt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/subtitle_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Quick Date with Mom"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@id/content_txt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_txt" />
+
+            <TextView
+                android:id="@+id/content_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="20dp"
+                android:text="Enjoyed Dinner at Labodega in Empire Shopping Mall"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/subtitle_txt" />
+
+            <TextView
+                android:id="@+id/date_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="12sp"
+                android:text="Date:"
+                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/selectedDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:text="02/02/2024"
+                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintStart_toEndOf="@id/date_txt" />
+
+            <TextView
+                android:id="@+id/time_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:textSize="12sp"
+                android:text="Time:"
+                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintEnd_toStartOf="@id/selectedTimeText" />
+
+            <TextView
+                android:id="@+id/selectedTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:text="12:00 PM"
+                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
