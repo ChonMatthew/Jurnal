@@ -14,18 +14,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentListBinding
-import com.example.jurnalapp.viewmodel.UserViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.jurnalapp.viewmodel.EntryViewModel
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var mUserViewModel: UserViewModel
+    private lateinit var mEntryViewModel: EntryViewModel
+    private lateinit var adapter: ListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,14 +33,14 @@ class ListFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentListBinding.inflate(inflater, container, false)
 
-        val adapter = ListAdapter()
+        adapter = ListAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        mUserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
-        mUserViewModel.readAllData.observe(viewLifecycleOwner, Observer { user ->
-            adapter.setData(user)
+        mEntryViewModel = ViewModelProvider(this).get(EntryViewModel::class.java)
+        mEntryViewModel.readAllData.observe(viewLifecycleOwner, Observer { entry ->
+            adapter.setData(entry)
         })
 
         binding.floatingActionButton.setOnClickListener {
@@ -56,20 +55,25 @@ class ListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.delete_menu, menu)
+
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search?.actionView as? androidx.appcompat.widget.SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.menu_delete) {
-            deleteAllUsers()
+            deleteAllEntrys()
         }
         @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
-    private fun deleteAllUsers() {
+    private fun deleteAllEntrys() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setPositiveButton("Yes") {_,_ ->
-            mUserViewModel.deleteAllUsers()
+            mEntryViewModel.deleteAllEntries()
             Toast.makeText(requireContext(), "Successfully Cleared", Toast.LENGTH_LONG).show()
         }
         builder.setNegativeButton("No") { _, _ -> }
@@ -81,5 +85,29 @@ class ListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if(query != null) {
+            searchDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if(query != null) {
+            searchDatabase(query)
+        }
+        return true
+    }
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+        mEntryViewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner) { list ->
+            list.let {
+                adapter.setData(it)
+            }
+        }
     }
 }

@@ -11,17 +11,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.jurnalapp.R
-import com.example.jurnalapp.databinding.FragmentListBinding
 import com.example.jurnalapp.databinding.FragmentUpdateBinding
-import com.example.jurnalapp.model.User
-import com.example.jurnalapp.viewmodel.UserViewModel
+import com.example.jurnalapp.model.Entry
+import com.example.jurnalapp.viewmodel.EntryViewModel
 
 class UpdateFragment : Fragment() {
 
@@ -30,7 +27,7 @@ class UpdateFragment : Fragment() {
 
     private val args by navArgs<UpdateFragmentArgs>()
 
-    private lateinit var mUserViewModel: UserViewModel
+    private lateinit var mEntryViewModel: EntryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,11 +37,11 @@ class UpdateFragment : Fragment() {
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
 //        val view =  inflater.inflate(R.layout.fragment_update, container, false)
 
-        mUserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        mEntryViewModel = ViewModelProvider(this).get(EntryViewModel::class.java)
 
-        binding.updateFirstName.setText(args.currentUser.firstName)
-        binding.updateLastName.setText(args.currentUser.lastName)
-        binding.updateAge.setText(args.currentUser.age.toString())
+        binding.updateTitle.setText(args.currentEntry.title)
+        binding.updateSubtitle.setText(args.currentEntry.subtitle)
+        binding.updateContent.setText(args.currentEntry.content)
 
         binding.UpdateButton.setOnClickListener {
             updateItem()
@@ -57,15 +54,14 @@ class UpdateFragment : Fragment() {
     }
 
     private fun updateItem() {
-        val firstName = binding.updateFirstName.text.toString()
-        val lastName = binding.updateLastName.text.toString()
-        val age = Integer.parseInt(binding.updateAge.text.toString())
-        val input_age = binding.updateAge.text
+        val title = binding.updateTitle.text.toString()
+        val subtitle = binding.updateSubtitle.text.toString()
+        val content = binding.updateContent.text.toString()
 
-        if(inputCheck(firstName, lastName, input_age)) {
-            val updatedUser = User(args.currentUser.id, firstName, lastName, age)
+        if(inputCheck(title, subtitle, content)) {
+            val updatedEntry = Entry(args.currentEntry.id, title, subtitle, content)
 
-            mUserViewModel.updateUser(updatedUser)
+            mEntryViewModel.updateEntry(updatedEntry)
             Toast.makeText(requireContext(), "Updated Successfully!", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_updateFragment_to_listFragment)
         }else {
@@ -73,8 +69,8 @@ class UpdateFragment : Fragment() {
         }
     }
 
-    private fun inputCheck(firstName: String, lastName: String, age: Editable): Boolean {
-        return !(TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) || age.isEmpty())
+    private fun inputCheck(title: String, subtitle: String, content: String): Boolean {
+        return !(TextUtils.isEmpty(title) || TextUtils.isEmpty(subtitle) || TextUtils.isEmpty(content))
 
     }
 
@@ -84,22 +80,22 @@ class UpdateFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.menu_delete){
-            deleteUser()
+            deleteEntry()
         }
         @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
-    private fun deleteUser() {
+    private fun deleteEntry() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setPositiveButton("Yes") {_,_ ->
-            mUserViewModel.deleteUser(args.currentUser)
+            mEntryViewModel.deleteEntry(args.currentEntry)
             Toast.makeText(requireContext(), "Successfully Removed", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_updateFragment_to_listFragment)
         }
         builder.setNegativeButton("No") { _, _ -> }
-        builder.setTitle("Delete ${args.currentUser.firstName}?")
-        builder.setMessage("Are You Sure You Want To Delete ${args.currentUser.firstName}")
+        builder.setTitle("Delete ${args.currentEntry.title}?")
+        builder.setMessage("Are You Sure You Want To Delete ${args.currentEntry.title}")
         builder.create().show()
     }
 }

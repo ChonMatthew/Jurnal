@@ -6,23 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentAddBinding
-import com.example.jurnalapp.databinding.FragmentListBinding
-import com.example.jurnalapp.model.User
-import com.example.jurnalapp.viewmodel.UserViewModel
+import com.example.jurnalapp.model.Entry
+import com.example.jurnalapp.viewmodel.EntryViewModel
 
 class AddFragment : Fragment() {
 
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var mUserViewModel: UserViewModel
+    private lateinit var mEntryViewModel: EntryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +28,7 @@ class AddFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentAddBinding.inflate(inflater, container, false)
 
-        mUserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        mEntryViewModel = ViewModelProvider(this).get(EntryViewModel::class.java)
 
         binding.AddButton.setOnClickListener {
             insertDataToDatabase()
@@ -41,18 +38,14 @@ class AddFragment : Fragment() {
     }
 
     private fun insertDataToDatabase() {
-        val firstName = binding.editFirstName.text.toString()
-        val lastName = binding.editLastName.text.toString()
-        val age = binding.editAge.text
+        val title = binding.editTitle.text.toString()
+        val subtitle = binding.editSubtitle.text.toString()
+        val content = binding.editContent.text.toString()
 
-//        val firstName = view?.findViewById<EditText>(R.id.editFirstName)?.text.toString()
-//        val lastName = view?.findViewById<EditText>(R.id.editLastName)?.text.toString()
-//        val age = requireView().findViewById<EditText>(R.id.editAge).text
+        if(inputCheck(title, subtitle, content)) {
+            val entry = Entry(0, title, subtitle, content)
 
-        if(inputCheck(firstName, lastName, age)) {
-            val user = User(0, firstName, lastName, Integer.parseInt(age.toString()))
-
-            mUserViewModel.addUser(user)
+            mEntryViewModel.addEntry(entry)
             Toast.makeText(requireContext(), "Successfully Added!", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         }else {
@@ -60,8 +53,8 @@ class AddFragment : Fragment() {
         }
     }
 
-    private fun inputCheck(firstName: String, lastName: String, age: Editable): Boolean {
-        return !(firstName.isEmpty() || lastName.isEmpty() || age.isEmpty())
+    private fun inputCheck(title: String, subtitle: String, content: String): Boolean {
+        return !(title.isEmpty() || subtitle.isEmpty() || content.isEmpty())
 
     }
 }

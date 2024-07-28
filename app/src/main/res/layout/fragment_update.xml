@@ -9,43 +9,44 @@
     tools:ignore="Autofill">
 
     <EditText
-        android:id="@+id/updateFirstName"
-        android:layout_width="match_parent"
+        android:id="@+id/updateTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="First Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:inputType="text"
+        android:hint="Entry Title"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/updateSubtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/updateLastName"
-        android:layout_width="match_parent"
+        android:id="@+id/updateSubtitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Last Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:inputType="text"
+        android:hint="Entry Subtitle"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/updateContent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updateFirstName" />
+        app:layout_constraintTop_toBottomOf="@id/updateTitle" />
 
     <EditText
-        android:id="@+id/updateAge"
-        android:layout_width="match_parent"
+        android:id="@+id/updateContent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
-        android:inputType="number"
-        android:hint="Age"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:inputType="text"
+        android:hint="Entry Content"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/UpdateButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updateLastName"/>
+        app:layout_constraintTop_toBottomOf="@id/updateSubtitle" />
 
     <Button
         android:id="@+id/UpdateButton"
@@ -56,5 +57,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updateAge" />
+        app:layout_constraintTop_toBottomOf="@+id/updateContent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

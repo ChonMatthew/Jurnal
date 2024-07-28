@@ -34,7 +34,12 @@
             android:id="@+id/action_updateFragment_to_listFragment"
             app:destination="@id/listFragment" />
         <argument
-            android:name="currentUser"
-            app:argType="com.example.jurnalapp.model.User" />
+            android:name="currentEntry"
+            app:argType="com.example.jurnalapp.model.Entry" />
     </fragment>
+    <fragment
+        android:id="@+id/entryDetailFragment"
+        android:name="com.example.jurnalapp.EntryDetailFragment"
+        android:label="fragment_entry_detail"
+        tools:layout="@layout/fragment_entry_detail" />
 </navigation>
