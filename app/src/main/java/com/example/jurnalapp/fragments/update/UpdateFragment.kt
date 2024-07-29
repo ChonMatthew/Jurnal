@@ -17,7 +17,6 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.graphics.drawable.Drawable
 import android.provider.MediaStore
 import android.util.Log
@@ -38,6 +37,7 @@ import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentUpdateBinding
 import com.example.jurnalapp.model.Entry
 import com.example.jurnalapp.viewmodel.EntryViewModel
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -109,8 +109,6 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                 Glide.with(this)
                     .load(imagePath)
                     .override(250, 250)
-//                    .placeholder(R.drawable.placeholder_image) // Use a placeholder if needed
-//                    .error(R.drawable.error_image) // Handle errors if needed
                     .into(binding.selectedImageView)
             }
         }
@@ -121,17 +119,24 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                 val selectedImageUri = result.data?.data
                 selectedImageUri?.let { uri ->
                     try {
-                        Glide.with(this)
-                            .asBitmap() // Decode as a software bitmap
-                            .load(uri)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE) // Prevent caching of the mutablebitmap
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    selectedImageBitmap = resource
-                                    binding.selectedImageView.setImageBitmap(selectedImageBitmap)
-                                }
-                                override fun onLoadCleared(placeholder: Drawable?) {}
-                            })
+                        val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
+                        val options = BitmapFactory.Options().apply {
+                            inJustDecodeBounds = true
+                        }
+                        BitmapFactory.decodeStream(inputStream, null, options)
+
+                        val imageHeight = options.outHeight
+                        val imageWidth = options.outWidth
+                        val reqHeight = 2000 // Desired height
+                        val reqWidth = 2000 // Desired width
+
+                        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
+                        options.inJustDecodeBounds = false
+
+                        val scaledBitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri), null, options)
+
+                        selectedImageBitmap = scaledBitmap
+                        binding.selectedImageView.setImageBitmap(scaledBitmap)
                     } catch (e: Exception) {
                         Log.e("UpdateFragment", "Error decoding image: ", e)
                     }
@@ -154,6 +159,7 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
         return binding.root
     }
+
     // Show the date picker dialog
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
@@ -178,6 +184,7 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
         datePickerDialog.show()
     }
+
     // Show the time picker dialog
     private fun showTimePicker() {
         val timePickerDialog = TimePickerDialog(
@@ -187,13 +194,16 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             calendar.get(Calendar.MINUTE),
             true
         )
-        timePickerDialog.show()}
+        timePickerDialog.show()
+    }
+
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, minute)
         selectedTimeInMillis = calendar.timeInMillis
         updateDateTimeText()
     }
+
     // Update the date and time text views with the formatted date and time
     private fun updateDateTimeText() {
         entryDateText.text = dateFormat.format(Date(selectedDateInMillis))
@@ -212,10 +222,9 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
             if (selectedImageBitmap != null) {
                 mEntryViewModel.updateEntryWithImage(args.currentEntry, selectedImageBitmap!!, requireContext())
-                { updatedEntryWithImage -> setFragmentResult("update_request", bundleOf("is_updated" to true, "updated_entry" to updatedEntryWithImage))
+                { updatedEntryWithImage ->
+                    setFragmentResult("update_request", bundleOf("is_updated" to true, "updated_entry" to updatedEntryWithImage))
                     navigateToEntryDetailFragment(updatedEntryWithImage)
-//                    val action = UpdateFragmentDirections.actionUpdateFragmentToEntryDetailFragment(updatedEntry, true)
-//                    findNavController().navigate(action)
                 }
             } else {
                 mEntryViewModel.updateEntry(updatedEntry)
@@ -223,14 +232,13 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                 navigateToEntryDetailFragment(updatedEntry)
             }
             Toast.makeText(requireContext(), "Updated Successfully!", Toast.LENGTH_LONG).show()
-        }else {
+        } else {
             Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun inputCheck(title: String, subtitle: String, content: String): Boolean {
         return !(TextUtils.isEmpty(title) || TextUtils.isEmpty(subtitle) || TextUtils.isEmpty(content))
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -244,6 +252,7 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
+
     // Delete the entry from the database
     private fun deleteEntry() {
         val builder = AlertDialog.Builder(requireContext())
@@ -261,5 +270,21 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private fun navigateToEntryDetailFragment(updatedEntry: Entry) {
         val action = UpdateFragmentDirections.actionUpdateFragmentToEntryDetailFragment(updatedEntry, true)
         findNavController().navigate(action)
+    }
+
+    // Calculate inSampleSize value for BitmapFactory.Options to downsample the image
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
     }
 }

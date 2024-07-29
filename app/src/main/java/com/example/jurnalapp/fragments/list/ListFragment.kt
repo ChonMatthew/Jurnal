@@ -18,7 +18,8 @@ import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentListBinding
 import com.example.jurnalapp.viewmodel.EntryViewModel
 
-class ListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTextListener {
+class ListFragment : Fragment() {
+//    , androidx.appcompat.widget.SearchView.OnQueryTextListener
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -53,41 +54,41 @@ class ListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTex
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_menu, menu)
-
-        val search = menu.findItem(R.id.menu_search)
-        val searchView = search?.actionView as? androidx.appcompat.widget.SearchView
-        searchView?.isSubmitButtonEnabled = true
-        searchView?.setOnQueryTextListener(this)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.search_menu, menu)
+//
+//        val search = menu.findItem(R.id.menu_search)
+//        val searchView = search?.actionView as? androidx.appcompat.widget.SearchView
+//        searchView?.isSubmitButtonEnabled = true
+//        searchView?.setOnQueryTextListener(this)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        if(query != null) {
-            searchDatabase(query)
-        }
-        return true
-    }
-
-    override fun onQueryTextChange(query: String?): Boolean {
-        if(query != null) {
-            searchDatabase(query)
-        }
-        return true
-    }
-
-    private fun searchDatabase(query: String) {
-        val searchQuery = "%$query%"
-
-        mEntryViewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner) { list ->
-            list.let {
-                adapter.setData(it)
-            }
-        }
-    }
+//    override fun onQueryTextSubmit(query: String?): Boolean {
+//        if(query != null) {
+//            searchDatabase(query)
+//        }
+//        return true
+//    }
+//
+//    override fun onQueryTextChange(query: String?): Boolean {
+//        if(query != null) {
+//            searchDatabase(query)
+//        }
+//        return true
+//    }
+//
+//    private fun searchDatabase(query: String) {
+//        val searchQuery = "%$query%"
+//
+//        mEntryViewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner) { list ->
+//            list.let {
+//                adapter.setData(it)
+//            }
+//        }
+//    }
 }

@@ -5,13 +5,14 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rowLayout"
-    android:padding="24dp">
+    android:padding="12dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/app_peach"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                android:scaleType="fitCenter"
-                android:maxHeight="100dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintHeight_max="200dp"
                 app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -37,11 +38,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dinner Date"
-                android:textSize="40sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/subtitle_txt"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rowImage"/>
+                app:layout_constraintTop_toBottomOf="@id/date_txt"/>
 
             <TextView
                 android:id="@+id/subtitle_txt"
@@ -49,30 +50,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Quick Date with Mom"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@id/content_txt"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_txt" />
 
-            <TextView
-                android:id="@+id/content_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="20dp"
-                android:text="Enjoyed Dinner at Labodega in Empire Shopping Mall"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/subtitle_txt" />
+<!--            <TextView-->
+<!--                android:id="@+id/content_txt"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="6dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:text="Enjoyed Dinner at Labodega in Empire Shopping Mall"-->
+<!--                android:textSize="14sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/subtitle_txt" />-->
 
             <TextView
                 android:id="@+id/date_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:textSize="12sp"
                 android:text="Date:"
-                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintTop_toBottomOf="@id/rowImage"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
@@ -80,10 +82,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginStart="4dp"
                 android:textSize="12sp"
                 android:text="02/02/2024"
-                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintTop_toBottomOf="@id/rowImage"
                 app:layout_constraintStart_toEndOf="@id/date_txt" />
 
             <TextView
@@ -91,10 +94,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="4dp"
                 android:textSize="12sp"
                 android:text="Time:"
-                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintTop_toBottomOf="@id/rowImage"
                 app:layout_constraintEnd_toStartOf="@id/selectedTimeText" />
 
             <TextView
@@ -102,10 +106,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginStart="4dp"
                 android:textSize="12sp"
                 android:text="12:00 PM"
-                app:layout_constraintTop_toBottomOf="@id/content_txt"
+                app:layout_constraintTop_toBottomOf="@id/rowImage"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

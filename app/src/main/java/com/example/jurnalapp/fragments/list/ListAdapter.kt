@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.CustomRowBinding
 import com.example.jurnalapp.databinding.FragmentAddBinding
+import com.example.jurnalapp.fragments.search.SearchFragmentDirections
 import com.example.jurnalapp.model.Entry
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -24,7 +25,7 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
     inner class MyViewHolder(itemBinding: CustomRowBinding): RecyclerView.ViewHolder(itemBinding.root) {
         val title_txt: TextView = itemBinding.titleTxt
         val subtitle_txt: TextView = itemBinding.subtitleTxt
-        val content_txt: TextView = itemBinding.contentTxt
+//        val content_txt: TextView = itemBinding.contentTxt
         val selectedDateText: TextView = itemBinding.selectedDateText
         val selectedTimeText: TextView = itemBinding.selectedTimeText
         val entryImageView: ImageView = itemBinding.rowImage
@@ -44,7 +45,7 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val currentItem = entryList[position]
         holder.title_txt.text = currentItem.title
         holder.subtitle_txt.text = currentItem.subtitle
-        holder.content_txt.text = currentItem.content
+//        holder.content_txt.text = currentItem.content
 
         // Format date and time
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -59,13 +60,20 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
             .load(currentItem.imagePath)
 //            .placeholder(R.drawable.placeholder_image) // Optional placeholder
 //            .error(R.drawable.error_image) // Optional error image
-            .override(250, 250) // Resize to 250x250 pixels
-            .fitCenter()
+            .override(400, 400) // Resize to 250x250 pixels
+            .centerCrop()
             .into(holder.entryImageView)
 
         holder.rowLayout.setOnClickListener {
-            val action = ListFragmentDirections.actionListFragmentToEntryDetailFragment(currentItem)
-            holder.itemView.findNavController().navigate(action)
+            // Check if the navigation is from ListFragment or SearchFragment
+            val currentFragment = holder.itemView.findNavController().currentDestination?.id
+            if (currentFragment == R.id.listFragment) {
+                val action = ListFragmentDirections.actionListFragmentToEntryDetailFragment(currentItem)
+                holder.itemView.findNavController().navigate(action)
+            } else if (currentFragment == R.id.searchFragment) {
+                val action = SearchFragmentDirections.actionSearchFragmentToEntryDetailFragment(currentItem)
+                holder.itemView.findNavController().navigate(action)
+            }
         }
     }
 

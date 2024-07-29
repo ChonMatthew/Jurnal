@@ -88,6 +88,7 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                     try {
                         val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
                         selectedImageBitmap = ImageDecoder.decodeBitmap(source)
+                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 800, 800)
                         binding.selectedImageView.setImageBitmap(selectedImageBitmap)
                     } catch (e: Exception) {
                         Log.e("AddFragment", "Error decoding image: ", e)
@@ -172,6 +173,7 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         )
         timePickerDialog.show()
     }
+
     // Set a listener to check if the time has been selected from the dialog
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
@@ -199,7 +201,7 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
             Toast.makeText(requireContext(), "Successfully Added!", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
-        }else {
+        } else {
             Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_LONG).show()
         }
     }
@@ -207,6 +209,19 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     // Check if fields are filled
     private fun inputCheck(title: String, subtitle: String, content: String): Boolean {
         return !(title.isEmpty() || subtitle.isEmpty() || content.isEmpty())
+    }
 
+    // Method to resize the bitmap
+    private fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val bitmapRatio: Float = width.toFloat() / height.toFloat()
+        return if (bitmapRatio > 1) {
+            val resizedHeight = (maxWidth / bitmapRatio).toInt()
+            Bitmap.createScaledBitmap(bitmap, maxWidth, resizedHeight, true)
+        } else {
+            val resizedWidth = (maxHeight * bitmapRatio).toInt()
+            Bitmap.createScaledBitmap(bitmap, resizedWidth, maxHeight, true)
+        }
     }
 }
