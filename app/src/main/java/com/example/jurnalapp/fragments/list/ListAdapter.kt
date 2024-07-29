@@ -3,10 +3,12 @@ package com.example.jurnalapp.fragments.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.CustomRowBinding
 import com.example.jurnalapp.databinding.FragmentAddBinding
@@ -25,6 +27,7 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val content_txt: TextView = itemBinding.contentTxt
         val selectedDateText: TextView = itemBinding.selectedDateText
         val selectedTimeText: TextView = itemBinding.selectedTimeText
+        val entryImageView: ImageView = itemBinding.rowImage
         val rowLayout: ConstraintLayout = itemBinding.rowLayout
     }
 
@@ -51,6 +54,14 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val time = Date(currentItem.time)
         holder.selectedDateText.text = dateFormat.format(date)
         holder.selectedTimeText.text = timeFormat.format(time)
+
+        Glide.with(holder.itemView.context)
+            .load(currentItem.imagePath)
+//            .placeholder(R.drawable.placeholder_image) // Optional placeholder
+//            .error(R.drawable.error_image) // Optional error image
+            .override(250, 250) // Resize to 250x250 pixels
+            .fitCenter()
+            .into(holder.entryImageView)
 
         holder.rowLayout.setOnClickListener {
             val action = ListFragmentDirections.actionListFragmentToEntryDetailFragment(currentItem)

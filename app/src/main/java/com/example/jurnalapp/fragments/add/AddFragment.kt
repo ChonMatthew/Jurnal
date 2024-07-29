@@ -1,8 +1,12 @@
 package com.example.jurnalapp.fragments.add
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,22 +24,37 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.graphics.ImageDecoder
+import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 
 class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
+    // Declare variables for views and ViewModel
     private lateinit var entryDateText: TextView
     private lateinit var entryTimeText: TextView
+    private lateinit var mEntryViewModel: EntryViewModel
+
+    // Declare variables for image handling
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+
+    // Declare date and time formatters
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
     private val calendar = Calendar.getInstance()
     private var selectedDateInMillis = calendar.timeInMillis
     private var selectedTimeInMillis = calendar.timeInMillis
 
+    // Declare bitmap for selected image
+    private var selectedImageBitmap: Bitmap? = null
+
+    // Declare binding variables
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var mEntryViewModel: EntryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,14 +62,16 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentAddBinding.inflate(inflater, container, false)
-
+        // Initialize ViewModel
         mEntryViewModel = ViewModelProvider(this).get(EntryViewModel::class.java)
 
+        // Initialize views with corresponding IDs
         entryDateText = binding.entryDateText
         entryTimeText = binding.entryTimeText
 
         updateDateTimeText()
 
+        // Set click listener for the DatePicker and Time Picker
         binding.pickDateButton.setOnClickListener {
             showDatePicker()
         }
@@ -59,17 +80,62 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             showTimePicker()
         }
 
+        // Initialize image handling and activity
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                val selectedImageUri = result.data?.data
+                selectedImageUri?.let { uri ->
+                    try {
+                        val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
+                        selectedImageBitmap = ImageDecoder.decodeBitmap(source)
+                        binding.selectedImageView.setImageBitmap(selectedImageBitmap)
+                    } catch (e: Exception) {
+                        Log.e("AddFragment", "Error decoding image: ", e)
+                    }
+                }
+            }
+        }
+
+        val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission granted, launch image picker
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                pickImageLauncher.launch(intent)
+            } else {
+                // Permission denied, handle accordingly
+                Toast.makeText(requireContext(), "Permission denied to access images", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Set click listener for the pick image button
+        binding.pickImageButton.setOnClickListener {
+            // Check for permissions and launch image picker
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+                // Permission is already granted, launch image picker
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                pickImageLauncher.launch(intent)
+            } else {
+                // Permission is not granted, request it
+                requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+            }
+        }
+
+        // Set click listener for the Add button
         binding.AddButton.setOnClickListener {
             insertDataToDatabase()
         }
-
         return binding.root
     }
+
+    // Update the date and time text views with the formatted date and time
     private fun updateDateTimeText() {
         entryDateText.text = dateFormat.format(Date(selectedDateInMillis))
         entryTimeText.text = timeFormat.format(Date(selectedTimeInMillis))
     }
 
+    // Show the date picker dialog
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
@@ -79,14 +145,13 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 selectedDateInMillis = calendar.timeInMillis
                 updateDateTimeText()
-                // Update the date text view (if you have one)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
+        // Set a listener to check if the date has been selected from the dialog
         datePickerDialog.setOnDateSetListener { _, year, month, dayOfMonth ->
-            // This listener is triggered when the user sets a date
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -96,40 +161,42 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         datePickerDialog.show()
     }
 
+    // Show the date picker dialog
     private fun showTimePicker() {
         val timePickerDialog = TimePickerDialog(
             requireContext(),
             this,
-//            { _, hourOfDay, minute ->
-//                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-//                calendar.set(Calendar.MINUTE, minute)
-//                selectedTimeInMillis = calendar.timeInMillis
-//                updateDateTimeText()
-//                // Update the time text view (if you have one)
-//            }
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
-            true // Use 24-hour format
+            true
         )
         timePickerDialog.show()
     }
-        override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            calendar.set(Calendar.MINUTE, minute)
-            selectedTimeInMillis = calendar.timeInMillis
-            updateDateTimeText()
-        }
+    // Set a listener to check if the time has been selected from the dialog
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        calendar.set(Calendar.MINUTE, minute)
+        selectedTimeInMillis = calendar.timeInMillis
+        updateDateTimeText()
+    }
 
-
+    // Insert data into the database
     private fun insertDataToDatabase() {
         val title = binding.editTitle.text.toString()
         val subtitle = binding.editSubtitle.text.toString()
         val content = binding.editContent.text.toString()
+        val selectedDateInMillis = calendar.timeInMillis
+        val selectedTimeInMillis = calendar.timeInMillis
+        val selectedImageBitmap = selectedImageBitmap
 
         if(inputCheck(title, subtitle, content)) {
-            val entry = Entry(0, title, subtitle, content, selectedDateInMillis, selectedTimeInMillis)
+            val entry = Entry(0, title, subtitle, content, selectedDateInMillis, selectedTimeInMillis, null)
 
-            mEntryViewModel.addEntry(entry)
+            if (selectedImageBitmap != null) {
+                mEntryViewModel.addEntryWithImage(entry, selectedImageBitmap, requireContext())
+            } else {
+                mEntryViewModel.addEntry(entry)
+            }
             Toast.makeText(requireContext(), "Successfully Added!", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         }else {
@@ -137,6 +204,7 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
+    // Check if fields are filled
     private fun inputCheck(title: String, subtitle: String, content: String): Boolean {
         return !(title.isEmpty() || subtitle.isEmpty() || content.isEmpty())
 

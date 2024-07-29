@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.example.jurnalapp.fragments.update.UpdateFragment"
-        android:label="Update Fragment" >
+        android:label="Update Entry" >
         <argument
             android:name="currentEntry"
             app:argType="com.example.jurnalapp.model.Entry" />

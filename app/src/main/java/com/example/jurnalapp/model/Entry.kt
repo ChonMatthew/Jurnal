@@ -14,5 +14,6 @@ data class Entry(
     val subtitle: String,
     val content: String,
     val date: Long,
-    val time: Long
+    val time: Long,
+    val imagePath: String?
 ): Parcelable

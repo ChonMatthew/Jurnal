@@ -62,26 +62,6 @@ class ListFragment : Fragment(), androidx.appcompat.widget.SearchView.OnQueryTex
         searchView?.setOnQueryTextListener(this)
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if(item.itemId == R.id.menu_delete) {
-//            deleteAllEntrys()
-//        }
-//        @Suppress("DEPRECATION")
-//        return super.onOptionsItemSelected(item)
-//    }
-
-//    private fun deleteAllEntrys() {
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setPositiveButton("Yes") {_,_ ->
-//            mEntryViewModel.deleteAllEntries()
-//            Toast.makeText(requireContext(), "Successfully Cleared", Toast.LENGTH_LONG).show()
-//        }
-//        builder.setNegativeButton("No") { _, _ -> }
-//        builder.setTitle("Clear All Entries?")
-//        builder.setMessage("Are You Sure You Want To Clear Your Jurnal?")
-//        builder.create().show()
-//    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
