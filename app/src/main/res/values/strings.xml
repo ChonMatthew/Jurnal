@@ -23,4 +23,5 @@
     <string name="placeholder_content">Enjoyed Dinner at Labodega in Empire Shopping Mall</string>
     <string name="description_add_entry">ADD ENTRY</string>
     <string name="button_update">Update</string>
+    <string name="empty_hint">Tap the + button for your first entry</string>
 </resources>

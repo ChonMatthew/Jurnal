@@ -65,7 +65,7 @@
         android:visibility="gone"
         android:layout_marginTop="20dp"
         android:textSize="20sp"
-        android:text="Tap the + button for your first entry"
+        android:text="@string/empty_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emptyTextView" />
