@@ -1,5 +1,7 @@
 package com.example.jurnalapp
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +15,13 @@ import com.example.jurnalapp.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        sharedPreferences = getSharedPreferences("ThemePrefs", MODE_PRIVATE)
+        applyTheme() // Apply the theme before setting content view
 
+        super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.myToolbar)
@@ -40,6 +45,10 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.fragmentContainerView).navigate(R.id.searchFragment)
                     true
                 }
+                R.id.settingsActivity -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
                 else -> {
                     NavigationUI.onNavDestinationSelected(item, navController)
                 }
@@ -49,21 +58,22 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController(R.id.fragmentContainerView)
-                when (navController.currentDestination?.id) {
-                    R.id.listFragment -> {
-                        isEnabled = false
-                        onBackPressedDispatcher.onBackPressed()
-                    }
-                    R.id.addFragment, R.id.updateFragment, R.id.entryDetailFragment -> {
-                        navController.navigate(R.id.listFragment)
-                    }
-                    else -> {
-                        isEnabled = false
-                        onBackPressedDispatcher.onBackPressed()
-                    }
+                if (navController.currentDestination?.id != R.id.listFragment) {
+                    navController.navigate(R.id.listFragment)
+                } else {
+                    finish() // Exits the app when on the ListFragment
                 }
             }
         })
+    }
+
+    private fun applyTheme() {
+        val theme = sharedPreferences.getString("theme", "green")
+        when (theme) {
+            "green" -> setTheme(R.style.Theme_JurnalApp)
+            "purple" -> setTheme(R.style.Theme_JurnalApp_2)
+            "blue" -> setTheme(R.style.Theme_JurnalApp_3)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

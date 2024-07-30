@@ -14,7 +14,6 @@ import com.example.jurnalapp.databinding.FragmentListBinding
 import com.example.jurnalapp.viewmodel.EntryViewModel
 
 class ListFragment : Fragment() {
-//    , androidx.appcompat.widget.SearchView.OnQueryTextListener
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -37,6 +36,7 @@ class ListFragment : Fragment() {
         mEntryViewModel = ViewModelProvider(this).get(EntryViewModel::class.java)
         mEntryViewModel.readAllData.observe(viewLifecycleOwner, Observer { entry ->
             adapter.setData(entry)
+            toggleEmptyState(entry.isEmpty())
         })
 
         binding.floatingActionButton.setOnClickListener {
@@ -44,6 +44,20 @@ class ListFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun toggleEmptyState(isEmpty: Boolean) {
+        if (isEmpty) {
+            binding.recyclerView.visibility = View.GONE
+            binding.emptyImageView.visibility = View.VISIBLE
+            binding.emptyTextView.visibility = View.VISIBLE
+            binding.emptyHintTextView.visibility = View.VISIBLE
+        } else {
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.emptyImageView.visibility = View.GONE
+            binding.emptyTextView.visibility = View.GONE
+            binding.emptyHintTextView.visibility = View.GONE
+        }
     }
 
     override fun onDestroy() {

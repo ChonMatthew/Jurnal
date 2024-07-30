@@ -5,10 +5,29 @@
         <item name="colorPrimary">#B5CFB7</item>
         <item name="colorPrimaryVariant">#B5CFB7</item>
         <item name="android:textViewStyle">@style/BlackText</item>
-        <item name="android:statusBarColor">
-            #B5CFB7
-        </item>
+        <item name="android:statusBarColor">#B5CFB7</item>
+        <item name="cardViewStyle">@style/CustomCardViewStyle1</item>
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
+
+    <style name="Theme.JurnalApp.2" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#B692C2</item>
+        <item name="colorPrimaryVariant">#B692C2</item>
+        <item name="android:textViewStyle">@style/BlackText</item>
+        <item name="android:statusBarColor">#B692C2</item>
+        <item name="cardViewStyle">@style/CustomCardViewStyle2</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="Theme.JurnalApp.3" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#7FA1C3</item>
+        <item name="colorPrimaryVariant">#7FA1C3</item>
+        <item name="android:textViewStyle">@style/BlackText</item>
+        <item name="android:statusBarColor">#7FA1C3</item>
+        <item name="cardViewStyle">@style/CustomCardViewStyle3</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
 
     <style name="BlackText">
         <item name="android:textColor">@android:color/black</item>
@@ -17,6 +36,18 @@
     <!-- Custom CardView styles -->
     <style name="CustomCardViewStyle1" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">#E7E8D8</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="CustomCardViewStyle2" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">#FFDFD6</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="CustomCardViewStyle3" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">#E2DAD6</item>
         <item name="cardCornerRadius">12dp</item>
         <item name="cardElevation">0dp</item>
     </style>
