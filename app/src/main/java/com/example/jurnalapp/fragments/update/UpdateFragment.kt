@@ -113,8 +113,8 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                         }
                         BitmapFactory.decodeStream(inputStream, null, options)
 
-                        val reqHeight = 5000
-                        val reqWidth = 5000
+                        val reqHeight = 2000
+                        val reqWidth = 2000
 
                         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
                         options.inJustDecodeBounds = false
@@ -251,13 +251,11 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val subtitle = binding.updateSubtitle.text.toString()
         val content = binding.updateContent.text.toString()
 
-        if(inputCheck(title, subtitle, content)) {
-            val updatedEntry = Entry(args.currentEntry.id, title, subtitle, content, selectedDateInMillis, selectedTimeInMillis, null)
-            isEntryUpdated = true
+        if (inputCheck(title, subtitle, content)) {
+            val updatedEntry = Entry(args.currentEntry.id, title, subtitle, content, selectedDateInMillis, selectedTimeInMillis, args.currentEntry.imagePath)
 
             if (selectedImageBitmap != null) {
-                mEntryViewModel.updateEntryWithImage(args.currentEntry, selectedImageBitmap!!, requireContext())
-                { updatedEntryWithImage ->
+                mEntryViewModel.updateEntryWithImage(updatedEntry, selectedImageBitmap!!, requireContext()) { updatedEntryWithImage ->
                     setFragmentResult("update_request", bundleOf("is_updated" to true, "updated_entry" to updatedEntryWithImage))
                     navigateToEntryDetailFragment(updatedEntryWithImage)
                 }
@@ -266,6 +264,7 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                 setFragmentResult("update_request", bundleOf("is_updated" to true, "updated_entry" to updatedEntry))
                 navigateToEntryDetailFragment(updatedEntry)
             }
+
             Toast.makeText(requireContext(), "Updated Successfully!", Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_LONG).show()
