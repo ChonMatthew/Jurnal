@@ -15,5 +15,7 @@ data class Entry(
     val content: String,
     val date: Long,
     val time: Long,
-    val imagePath: String?
+    val imagePath: String?,
+    val latitude: Double?,
+    val longitude: Double?
 ): Parcelable

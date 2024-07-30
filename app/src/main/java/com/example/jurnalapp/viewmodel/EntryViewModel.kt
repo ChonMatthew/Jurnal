@@ -100,4 +100,28 @@ class EntryViewModel(application: Application): AndroidViewModel(application) {
             repository.updateEntry(updatedEntry) // Update the entry
         }
     }
+
+    fun addEntryWithLocation(entry: Entry, imageBitmap: Bitmap?, context: Context, latitude: Double?, longitude: Double?) = viewModelScope.launch {
+        val imagePath = if (imageBitmap != null) {
+            repository.saveImage(imageBitmap, context)
+        } else {
+            null
+        }
+        val entryWithImageAndLocation = entry.copy(imagePath = imagePath, latitude = latitude, longitude = longitude)
+        repository.addEntry(entryWithImageAndLocation)
+    }
+
+    fun updateEntryWithLocation(entry: Entry, newImageBitmap: Bitmap?, context: Context, latitude: Double?, longitude: Double?, callback: (Entry) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        val newImagePath = if (newImageBitmap != null) {
+            repository.saveImage(newImageBitmap, context)
+        } else {
+            null
+        }
+        val updatedEntry = entry.copy(imagePath = newImagePath, latitude = latitude, longitude = longitude)
+        entryDao.updateEntry(updatedEntry)
+        withContext(Dispatchers.Main) {
+            callback(updatedEntry)
+        }
+        repository.updateEntry(updatedEntry)
+    }
 }

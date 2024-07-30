@@ -113,8 +113,9 @@
             android:id="@+id/pickDateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Select Date"
-            app:layout_constraintTop_toBottomOf="@id/selectedImageView"
+            app:layout_constraintTop_toBottomOf="@id/location_text"
             app:layout_constraintBottom_toTopOf="@id/date_txt"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -122,8 +123,9 @@
             android:id="@+id/pickTimeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Select Time"
-            app:layout_constraintTop_toBottomOf="@id/selectedImageView"
+            app:layout_constraintTop_toBottomOf="@id/selected_location_text"
             app:layout_constraintBottom_toTopOf="@id/time_txt"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -159,6 +161,36 @@
             app:layout_constraintStart_toEndOf="@id/pickImageButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editContent" />
+
+        <Button
+            android:id="@+id/select_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Location"
+            app:layout_constraintTop_toBottomOf="@id/selectedImageView"
+            app:layout_constraintBottom_toTopOf="@id/selected_location_text"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Location: "
+            app:layout_constraintTop_toBottomOf="@id/select_location_button"
+            app:layout_constraintBottom_toTopOf="@id/pickDateButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/selected_location_text"/>
+
+
+        <TextView
+            android:id="@+id/selected_location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Sunway Pyramid"
+            app:layout_constraintTop_toBottomOf="@id/select_location_button"
+            app:layout_constraintStart_toEndOf="@id/location_text"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
