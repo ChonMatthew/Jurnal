@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_delete"
-        android:title="Delete"
+        android:title="@string/delete"
         android:icon="@drawable/ic_delete"
         android:iconTint="@color/white"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/menu_edit"
-        android:title="Edit"
+        android:title="@string/edit"
         android:icon="@drawable/ic_edit"
         android:iconTint="@color/white"
         app:showAsAction="ifRoom"/>

@@ -2,6 +2,7 @@
 agp = "8.5.1"
 androidxNavigationSafeargsGradlePlugin = "2.7.7"
 gradle = "8.5.1"
+#noinspection GradleDependency
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"

@@ -5,13 +5,13 @@
     <item
         android:id="@+id/listFragment"
         android:icon="@drawable/ic_home"
-        android:title="Home"
+        android:title="@string/home"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/searchFragment"
         android:icon="@drawable/ic_search"
-        android:title="Search"
+        android:title="@string/search"
         app:showAsAction="ifRoom"/>
 
 </menu>

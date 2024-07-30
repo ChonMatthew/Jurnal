@@ -1,7 +1,6 @@
 package com.example.jurnalapp.fragments.list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.CustomRowBinding
-import com.example.jurnalapp.databinding.FragmentAddBinding
 import com.example.jurnalapp.fragments.search.SearchFragmentDirections
 import com.example.jurnalapp.model.Entry
 import java.text.SimpleDateFormat

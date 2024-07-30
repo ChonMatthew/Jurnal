@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:layout_constraintHeight_max="200dp"
-            android:contentDescription="Add Entry Image"
+            android:contentDescription="@string/description_add_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -31,7 +31,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:hint="Entry Title"
+            android:hint="@string/hint_title"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/updateSubtitle"
@@ -45,7 +45,7 @@
             android:layout_marginTop="5dp"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:hint="Entry Subtitle"
+            android:hint="@string/hint_subtitle"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/updateContent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             android:layout_marginTop="20dp"
             android:ems="20"
             android:inputType="textMultiLine"
-            android:hint="Entry Content"
+            android:hint="@string/hint_content"
             android:minHeight="48dp"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/pickImageButton"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textSize="12sp"
-            android:text="Date:"
+            android:text="@string/date"
             app:layout_constraintTop_toBottomOf="@id/updateDateButton"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -83,7 +83,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="4dp"
             android:textSize="12sp"
-            android:text="02/02/2024"
+            android:text="@string/date_selected"
             app:layout_constraintTop_toBottomOf="@id/updateDateButton"
             app:layout_constraintStart_toEndOf="@id/date_txt" />
 
@@ -94,7 +94,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="4dp"
             android:textSize="12sp"
-            android:text="Time:"
+            android:text="@string/time"
             app:layout_constraintTop_toBottomOf="@id/updateTimeButton"
             app:layout_constraintEnd_toStartOf="@id/entryTimeText" />
 
@@ -105,7 +105,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="4dp"
             android:textSize="12sp"
-            android:text="12:00 PM"
+            android:text="@string/time_selected"
             app:layout_constraintTop_toBottomOf="@id/updateTimeButton"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -113,7 +113,7 @@
             android:id="@+id/updateDateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Date"
+            android:text="@string/button_select_date"
             app:layout_constraintTop_toBottomOf="@id/selectedImageView"
             app:layout_constraintBottom_toTopOf="@id/date_txt"
             app:layout_constraintStart_toStartOf="parent" />
@@ -122,7 +122,7 @@
             android:id="@+id/updateTimeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Time"
+            android:text="@string/button_select_time"
             app:layout_constraintTop_toBottomOf="@id/selectedImageView"
             app:layout_constraintBottom_toTopOf="@id/time_txt"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Update"
+            android:text="@string/button_update"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Select An Image"
+            android:text="@string/button_select_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@id/captureImageButton"

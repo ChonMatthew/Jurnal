@@ -1,20 +1,13 @@
 package com.example.jurnalapp.fragments.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.jurnalapp.R
-import com.example.jurnalapp.databinding.FragmentListBinding
 import com.example.jurnalapp.databinding.FragmentSearchBinding
 import com.example.jurnalapp.fragments.list.ListAdapter
 import com.example.jurnalapp.viewmodel.EntryViewModel

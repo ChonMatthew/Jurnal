@@ -3,7 +3,6 @@ package com.example.jurnalapp.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Environment
-import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import com.example.jurnalapp.data.EntryDao
 import com.example.jurnalapp.model.Entry

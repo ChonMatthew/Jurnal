@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:contentDescription="Add Entry Image"
+                android:contentDescription="@string/description_entry_image"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toTopOf="@id/imageCardView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Dinner Date"
+            android:text="@string/placeholder_row_title"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/entrySubtitle"
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Quick Date with Mom"
+            android:text="@string/placeholder_row_subtitle"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/entryContent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Enjoyed Dinner at Labodega in Empire Shopping Mall"
+            android:text="@string/placeholder_content"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/entrySubtitle" />
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textSize="12sp"
-            android:text="Date:"
+            android:text="@string/date"
             app:layout_constraintTop_toBottomOf="@id/imageCardView"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,7 +87,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="4dp"
             android:textSize="12sp"
-            android:text="02/02/2024"
+            android:text="@string/date_selected"
             app:layout_constraintTop_toBottomOf="@id/imageCardView"
             app:layout_constraintStart_toEndOf="@id/date_txt" />
 
@@ -98,7 +98,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="4dp"
             android:textSize="12sp"
-            android:text="Time:"
+            android:text="@string/time"
             app:layout_constraintTop_toBottomOf="@id/imageCardView"
             app:layout_constraintEnd_toStartOf="@id/entryTimeText" />
 
@@ -109,7 +109,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="4dp"
             android:textSize="12sp"
-            android:text="12:00 PM"
+            android:text="@string/time_selected"
             app:layout_constraintTop_toBottomOf="@id/imageCardView"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

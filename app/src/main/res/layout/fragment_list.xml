@@ -14,7 +14,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:clickable="true"
-        android:contentDescription="ADD ENTRY"
+        android:contentDescription="@string/description_add_entry"
         android:focusable="true"
         android:backgroundTint="@color/app_blue"
         app:tint="@color/white"

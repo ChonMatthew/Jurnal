@@ -1,6 +1,26 @@
 <resources>
-    <string name="app_name">JurnalApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="app_name">Jurnal</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="placeholder_row_title">Dinner Date</string>
+    <string name="placeholder_row_subtitle">Quick Date with Mom</string>
+    <string name="date">Date:</string>
+    <string name="date_selected">02/02/2024</string>
+    <string name="time">Time:</string>
+    <string name="time_selected">12:00 PM</string>
+    <string name="description_row_image">Image of Entry</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="description_add_image">Add Entry Image</string>
+    <string name="hint_title">Entry Title</string>
+    <string name="hint_subtitle">Entry Subtitle</string>
+    <string name="hint_content">Entry Content</string>
+    <string name="button_select_date">Select Date</string>
+    <string name="button_select_time">Select Time</string>
+    <string name="button_add">Add</string>
+    <string name="button_select_image">Select An Image</string>
+    <string name="description_entry_image">Add Entry Image</string>
+    <string name="placeholder_content">Enjoyed Dinner at Labodega in Empire Shopping Mall</string>
+    <string name="description_add_entry">ADD ENTRY</string>
+    <string name="button_update">Update</string>
 </resources>

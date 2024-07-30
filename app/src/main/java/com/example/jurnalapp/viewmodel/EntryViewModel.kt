@@ -3,7 +3,6 @@ package com.example.jurnalapp.viewmodel
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -11,13 +10,11 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.jurnalapp.data.EntryDao
 import com.example.jurnalapp.data.EntryDatabase
-import com.example.jurnalapp.repository.EntryRepository
 import com.example.jurnalapp.model.Entry
+import com.example.jurnalapp.repository.EntryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
 
 class EntryViewModel(application: Application): AndroidViewModel(application) {
 
