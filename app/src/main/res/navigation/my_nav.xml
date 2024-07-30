@@ -70,7 +70,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.jurnalapp.fragments.search.SearchFragment"
-        android:label="Entry Search" >
+        android:label="Jurnal Search" >
         <action
             android:id="@+id/action_searchFragment_to_entryDetailFragment"
             app:destination="@id/entryDetailFragment" />

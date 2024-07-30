@@ -27,10 +27,15 @@ import java.util.Locale
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
+import java.io.File
+import java.io.IOException
 
 class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
@@ -41,6 +46,8 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     // Declare variables for image handling
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
 
     // Declare date and time formatters
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -88,7 +95,7 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                     try {
                         val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
                         selectedImageBitmap = ImageDecoder.decodeBitmap(source)
-                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 800, 800)
+                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 5000, 5000)
                         binding.selectedImageView.setImageBitmap(selectedImageBitmap)
                     } catch (e: Exception) {
                         Log.e("AddFragment", "Error decoding image: ", e)
@@ -123,11 +130,73 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
         }
 
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                latestTmpUri?.let { uri ->
+                    try {
+                        val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
+                        selectedImageBitmap = ImageDecoder.decodeBitmap(source)
+                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 5000, 5000)
+                        binding.selectedImageView.setImageBitmap(selectedImageBitmap)
+                    } catch (e: Exception) {
+                        Log.e("AddFragment", "Error decoding image: ", e)
+                    }
+                }
+            }
+        }
+
+        requestCameraPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                takeImage()
+            } else {
+                Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.captureImageButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                takeImage()
+            } else {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+
         // Set click listener for the Add button
         binding.AddButton.setOnClickListener {
             insertDataToDatabase()
         }
         return binding.root
+    }
+
+    private var latestTmpUri: Uri? = null
+
+    private fun takeImage() {
+        @Suppress("DEPRECATION")
+        lifecycleScope.launchWhenStarted {
+            getTmpFileUri().let { uri ->
+                latestTmpUri = uri
+                takePictureLauncher.launch(uri)
+            }}
+    }
+
+    @Throws(IOException::class)
+    private fun getTmpFileUri(): Uri {
+        val tmpFile = File.createTempFile(
+            "tmp_image_file",
+            ".png",
+            requireContext().cacheDir
+        ).apply {
+            createNewFile()
+            deleteOnExit()
+        }
+
+        return FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.provider",
+            tmpFile
+        )
     }
 
     // Update the date and time text views with the formatted date and time

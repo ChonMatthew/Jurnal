@@ -1,93 +1,83 @@
 package com.example.jurnalapp.fragments.update
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.os.Bundle
-import android.text.TextUtils
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
+import android.view.*
 import android.widget.TextView
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentUpdateBinding
 import com.example.jurnalapp.model.Entry
 import com.example.jurnalapp.viewmodel.EntryViewModel
+import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
-    // Declare variables for views and ViewModel
     private lateinit var entryDateText: TextView
     private lateinit var entryTimeText: TextView
     private lateinit var mEntryViewModel: EntryViewModel
 
-    // Declare variables for image handling
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
 
-    // Declare bitmap for selected image
     private var selectedImageBitmap: Bitmap? = null
 
-    // Declare date and time formatters
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     private var selectedDateInMillis = 0L
     private var selectedTimeInMillis = 0L
 
-    // Declare binding variables
     private var _binding: FragmentUpdateBinding? = null
     private val binding get() = _binding!!
 
-    // Declare flag to check if entry is updated
     private var isEntryUpdated = false
+    private var latestTmpUri: Uri? = null
 
-    // Get the arguments passed from the ListFragment
     private val args by navArgs<UpdateFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
-        // Initialize ViewModel
         mEntryViewModel = ViewModelProvider(this).get(EntryViewModel::class.java)
 
-        // Initialize views with corresponding IDs
         binding.updateTitle.setText(args.currentEntry.title)
         binding.updateSubtitle.setText(args.currentEntry.subtitle)
         binding.updateContent.setText(args.currentEntry.content)
 
-        // Set the selected date and time in the text views
         selectedDateInMillis = args.currentEntry.date
         selectedTimeInMillis = args.currentEntry.time
         entryDateText = binding.entryDateText
@@ -95,7 +85,6 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
         updateDateTimeText()
 
-        // Set click listeners for the date and time buttons
         binding.updateDateButton.setOnClickListener {
             showDatePicker()
         }
@@ -113,7 +102,6 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
         }
 
-        // Initialize image handling and activity
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
                 val selectedImageUri = result.data?.data
@@ -125,10 +113,8 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                         }
                         BitmapFactory.decodeStream(inputStream, null, options)
 
-                        val imageHeight = options.outHeight
-                        val imageWidth = options.outWidth
-                        val reqHeight = 2000 // Desired height
-                        val reqWidth = 2000 // Desired width
+                        val reqHeight = 5000
+                        val reqWidth = 5000
 
                         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
                         options.inJustDecodeBounds = false
@@ -144,12 +130,44 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
         }
 
+        requestCameraPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                takeImage()
+            } else {
+                Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                latestTmpUri?.let { uri ->
+                    try {
+                        val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
+                        selectedImageBitmap = ImageDecoder.decodeBitmap(source)
+                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 5000, 5000)
+                        binding.selectedImageView.setImageBitmap(selectedImageBitmap)
+                    } catch (e: Exception) {
+                        Log.e("UpdateFragment", "Error decoding image: ", e)
+                    }
+                }
+            }
+        }
+
+        binding.captureImageButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                takeImage()
+            } else {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+
         binding.pickImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             pickImageLauncher.launch(intent)
         }
 
-        // Set click listener for the update button
         binding.UpdateButton.setOnClickListener {
             updateItem()
         }
@@ -160,7 +178,34 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         return binding.root
     }
 
-    // Show the date picker dialog
+    private fun takeImage() {
+        @Suppress("DEPRECATION")
+        lifecycleScope.launchWhenStarted {
+            getTmpFileUri().let { uri ->
+                latestTmpUri = uri
+                takePictureLauncher.launch(uri)
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun getTmpFileUri(): Uri {
+        val tmpFile = File.createTempFile(
+            "tmp_image_file",
+            ".png",
+            requireContext().cacheDir
+        ).apply {
+            createNewFile()
+            deleteOnExit()
+        }
+
+        return FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.provider",
+            tmpFile
+        )
+    }
+
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
@@ -175,17 +220,9 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
-        datePickerDialog.setOnDateSetListener { _, year, month, dayOfMonth ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            selectedDateInMillis = calendar.timeInMillis
-            updateDateTimeText()
-        }
         datePickerDialog.show()
     }
 
-    // Show the time picker dialog
     private fun showTimePicker() {
         val timePickerDialog = TimePickerDialog(
             requireContext(),
@@ -204,13 +241,11 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         updateDateTimeText()
     }
 
-    // Update the date and time text views with the formatted date and time
     private fun updateDateTimeText() {
         entryDateText.text = dateFormat.format(Date(selectedDateInMillis))
         entryTimeText.text = timeFormat.format(Date(selectedTimeInMillis))
     }
 
-    // Update the entry in the database
     private fun updateItem() {
         val title = binding.updateTitle.text.toString()
         val subtitle = binding.updateSubtitle.text.toString()
@@ -253,7 +288,6 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         return super.onOptionsItemSelected(item)
     }
 
-    // Delete the entry from the database
     private fun deleteEntry() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setPositiveButton("Yes") {_,_ ->
@@ -272,7 +306,6 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         findNavController().navigate(action)
     }
 
-    // Calculate inSampleSize value for BitmapFactory.Options to downsample the image
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1
@@ -286,5 +319,19 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
         }
         return inSampleSize
+    }
+
+    private fun resizeBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
+        val aspectRatio: Float = bitmap.width.toFloat() / bitmap.height.toFloat()
+        var scaledWidth = width
+        var scaledHeight = height
+
+        if (width / aspectRatio <= height) {
+            scaledHeight = (width / aspectRatio).toInt()
+        } else {
+            scaledWidth = (height * aspectRatio).toInt()
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true)
     }
 }

@@ -18,7 +18,7 @@ interface EntryDao {
     suspend fun addEntry(entry: Entry)
 
     // Retrieves all entries from the database
-    @Query("SELECT * FROM entry_table ORDER BY id ASC")
+    @Query("SELECT * FROM entry_table ORDER BY id DESC")
     fun readAllData(): LiveData<List<Entry>>
 
     // Updates the database with the new updated entry

@@ -30,9 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:hint="Entry Title"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/updateSubtitle"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,9 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:hint="Entry Subtitle"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/updateContent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/updateTitle" />
@@ -147,7 +147,18 @@
             android:text="Select An Image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@id/captureImageButton"
+            app:layout_constraintTop_toBottomOf="@+id/updateContent" />
+
+        <Button
+            android:id="@+id/captureImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_camera"
+            app:layout_constraintStart_toEndOf="@id/pickImageButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/updateContent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

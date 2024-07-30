@@ -14,12 +14,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.jurnalapp.MainActivity
 import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentEntryDetailBinding
 import com.example.jurnalapp.databinding.FragmentUpdateBinding
@@ -45,8 +48,6 @@ class EntryDetailFragment : Fragment() {
     // Get the arguments passed from the ListFragment
     private val args by navArgs<EntryDetailFragmentArgs>()
 
-
-    @Suppress("DEPRECATION")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,7 +82,7 @@ class EntryDetailFragment : Fragment() {
                 Glide.with(this)
                     .load(imagePath)
                     .diskCacheStrategy(DiskCacheStrategy.NONE) // Consider disabling caching for testing
-                    .override(250, 250)
+                    .override(2050, 2050)
                     .into(binding.entryImageView)
             } else {
                 binding.entryImageView.setImageDrawable(null)
@@ -103,6 +104,7 @@ class EntryDetailFragment : Fragment() {
         setFragmentResultListener("update_request") { _, bundle ->
             val isUpdated = bundle.getBoolean("is_updated", false)
             if (isUpdated) {
+                @Suppress("DEPRECATION")
                 val updatedEntry = bundle.getParcelable<Entry>("updated_entry")
                 if (updatedEntry != null) {
                     currentEntry = updatedEntry
@@ -118,7 +120,7 @@ class EntryDetailFragment : Fragment() {
                             Glide.with(this)
                                 .load(imagePath)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .override(250, 250)
+                                .override(2050, 2050)
                                 .into(binding.entryImageView)
                         } else {
                             // Handle cases where there's no image
@@ -129,36 +131,52 @@ class EntryDetailFragment : Fragment() {
             }
         }
 
-        @Suppress("DEPRECATION")
-        setHasOptionsMenu(true)
-
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.entry_menu, menu)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentEntryDetailBinding.bind(view)
+
+        // Set up the toolbar menu
+        val mainActivity = activity as MainActivity
+        mainActivity.setSupportActionBar(mainActivity.findViewById(R.id.my_toolbar))
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Add the MenuProvider
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.entry_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_delete -> {
+                        deleteEntry()
+                        true
+                    }
+                    R.id.menu_edit -> {
+                        val updatedEntry = currentEntry
+                        if (updatedEntry != null) {
+                            val action =
+                                EntryDetailFragmentDirections.actionEntryDetailFragmentToUpdateFragment(
+                                    updatedEntry
+                                )
+                            findNavController().navigate(action)
+                        }
+                        true
+                    }
+                    else -> {
+                        val action =
+                            EntryDetailFragmentDirections.actionEntryDetailFragmentToListFragment()
+                        findNavController().navigate(action)
+                        true
+                    }
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.menu_delete){
-            deleteEntry()
-        } else if (item.itemId == R.id.menu_edit) {
-            val updatedEntry = currentEntry
-            if(updatedEntry != null) {
-                val action =
-                    EntryDetailFragmentDirections.actionEntryDetailFragmentToUpdateFragment(
-                        updatedEntry
-                    )
-                findNavController().navigate(action)
-            }
-        } else {
-            val action =
-                EntryDetailFragmentDirections.actionEntryDetailFragmentToListFragment()
-            findNavController().navigate(action)
-        }
-        @Suppress("DEPRECATION")
-        return super.onOptionsItemSelected(item)
-    }
 
     // Delete the entry from the database
     private fun deleteEntry() {

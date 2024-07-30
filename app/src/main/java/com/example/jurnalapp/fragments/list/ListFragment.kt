@@ -48,47 +48,11 @@ class ListFragment : Fragment() {
             findNavController().navigate(R.id.action_listFragment_to_addFragment)
         }
 
-        @Suppress("DEPRECATION")
-        setHasOptionsMenu(true)
-
         return binding.root
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.search_menu, menu)
-//
-//        val search = menu.findItem(R.id.menu_search)
-//        val searchView = search?.actionView as? androidx.appcompat.widget.SearchView
-//        searchView?.isSubmitButtonEnabled = true
-//        searchView?.setOnQueryTextListener(this)
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
-//    override fun onQueryTextSubmit(query: String?): Boolean {
-//        if(query != null) {
-//            searchDatabase(query)
-//        }
-//        return true
-//    }
-//
-//    override fun onQueryTextChange(query: String?): Boolean {
-//        if(query != null) {
-//            searchDatabase(query)
-//        }
-//        return true
-//    }
-//
-//    private fun searchDatabase(query: String) {
-//        val searchQuery = "%$query%"
-//
-//        mEntryViewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner) { list ->
-//            list.let {
-//                adapter.setData(it)
-//            }
-//        }
-//    }
 }
