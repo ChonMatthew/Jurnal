@@ -35,6 +35,9 @@ import com.example.jurnalapp.R
 import com.example.jurnalapp.databinding.FragmentUpdateBinding
 import com.example.jurnalapp.model.Entry
 import com.example.jurnalapp.viewmodel.EntryViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -97,34 +100,39 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             if (imagePath.isNotEmpty()) {
                 Glide.with(this)
                     .load(imagePath)
-                    .override(250, 250)
+                    .override(1000, 1000)
                     .into(binding.selectedImageView)
             }
         }
 
+        // Initialize image handling and activity
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
                 val selectedImageUri = result.data?.data
                 selectedImageUri?.let { uri ->
-                    try {
-                        val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
-                        val options = BitmapFactory.Options().apply {
-                            inJustDecodeBounds = true
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        try {
+                            val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
+                            val options = BitmapFactory.Options().apply {
+                                inJustDecodeBounds = true
+                            }
+                            BitmapFactory.decodeStream(inputStream, null, options)
+
+                            val reqHeight = 1000
+                            val reqWidth = 1000
+
+                            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
+                            options.inJustDecodeBounds = false
+
+                            val scaledBitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri), null, options)
+
+                            selectedImageBitmap = scaledBitmap
+                            withContext(Dispatchers.Main) {
+                                binding.selectedImageView.setImageBitmap(scaledBitmap)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("UpdateFragment", "Error decoding image: ", e)
                         }
-                        BitmapFactory.decodeStream(inputStream, null, options)
-
-                        val reqHeight = 2000
-                        val reqWidth = 2000
-
-                        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
-                        options.inJustDecodeBounds = false
-
-                        val scaledBitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri), null, options)
-
-                        selectedImageBitmap = scaledBitmap
-                        binding.selectedImageView.setImageBitmap(scaledBitmap)
-                    } catch (e: Exception) {
-                        Log.e("UpdateFragment", "Error decoding image: ", e)
                     }
                 }
             }
@@ -140,16 +148,22 @@ class UpdateFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
         }
 
+        // Initialize take picture launcher to take images
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
                 latestTmpUri?.let { uri ->
-                    try {
-                        val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
-                        selectedImageBitmap = ImageDecoder.decodeBitmap(source)
-                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 5000, 5000)
-                        binding.selectedImageView.setImageBitmap(selectedImageBitmap)
-                    } catch (e: Exception) {
-                        Log.e("UpdateFragment", "Error decoding image: ", e)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        try {
+                            val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
+                            var bitmap = ImageDecoder.decodeBitmap(source)
+                            bitmap = resizeBitmap(bitmap, 1000, 1000)
+                            selectedImageBitmap = bitmap
+                            withContext(Dispatchers.Main) {
+                                binding.selectedImageView.setImageBitmap(bitmap)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("UpdateFragment", "Error decoding image: ", e)
+                        }
                     }
                 }
             }

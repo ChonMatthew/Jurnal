@@ -34,6 +34,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 
@@ -92,18 +95,23 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
                 val selectedImageUri = result.data?.data
                 selectedImageUri?.let { uri ->
-                    try {
-                        val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
-                        selectedImageBitmap = ImageDecoder.decodeBitmap(source)
-                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 5000, 5000)
-                        binding.selectedImageView.setImageBitmap(selectedImageBitmap)
-                    } catch (e: Exception) {
-                        Log.e("AddFragment", "Error decoding image: ", e)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        try {
+                            val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
+                            var bitmap = ImageDecoder.decodeBitmap(source)
+                            bitmap = resizeBitmap(bitmap, 1000, 1000)
+                            withContext(Dispatchers.Main) {
+                                binding.selectedImageView.setImageBitmap(bitmap)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("AddFragment", "Error decoding image: ", e)
+                        }
                     }
                 }
             }
         }
 
+        // Request permission to access images from gallery
         val requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
@@ -130,13 +138,14 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             }
         }
 
+        // Initialize take picture launcher to take images
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
                 latestTmpUri?.let { uri ->
                     try {
                         val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
                         selectedImageBitmap = ImageDecoder.decodeBitmap(source)
-                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 2000, 2000)
+                        selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 1000, 1000)
                         binding.selectedImageView.setImageBitmap(selectedImageBitmap)
                     } catch (e: Exception) {
                         Log.e("AddFragment", "Error decoding image: ", e)

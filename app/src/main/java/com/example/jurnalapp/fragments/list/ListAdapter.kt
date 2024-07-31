@@ -23,7 +23,6 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
     inner class MyViewHolder(itemBinding: CustomRowBinding): RecyclerView.ViewHolder(itemBinding.root) {
         val title_txt: TextView = itemBinding.titleTxt
         val subtitle_txt: TextView = itemBinding.subtitleTxt
-//        val content_txt: TextView = itemBinding.contentTxt
         val selectedDateText: TextView = itemBinding.selectedDateText
         val selectedTimeText: TextView = itemBinding.selectedTimeText
         val entryImageView: ImageView = itemBinding.rowImage
@@ -43,7 +42,6 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val currentItem = entryList[position]
         holder.title_txt.text = currentItem.title
         holder.subtitle_txt.text = currentItem.subtitle
-//        holder.content_txt.text = currentItem.content
 
         // Format date and time
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -56,9 +54,7 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
 
         Glide.with(holder.itemView.context)
             .load(currentItem.imagePath)
-//            .placeholder(R.drawable.placeholder_image) // Optional placeholder
-//            .error(R.drawable.error_image) // Optional error image
-            .override(400, 400) // Resize to 250x250 pixels
+            .override(400, 400)
             .centerCrop()
             .into(holder.entryImageView)
 
