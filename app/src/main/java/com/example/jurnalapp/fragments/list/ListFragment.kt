@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jurnalapp.R
+import com.example.jurnalapp.data.viewmodel.EntryViewModel
 import com.example.jurnalapp.databinding.FragmentListBinding
-import com.example.jurnalapp.viewmodel.EntryViewModel
 
 class ListFragment : Fragment() {
 

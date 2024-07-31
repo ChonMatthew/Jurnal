@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:layout_constraintHeight_max="200dp"
+            android:src="@drawable/ic_image_placeholder"
             android:contentDescription="@string/description_add_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,7 +62,7 @@
             android:inputType="textMultiLine"
             android:minHeight="48dp"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@id/pickImageButton"
+            app:layout_constraintBottom_toTopOf="@id/AddButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editSubtitle" />
 
@@ -135,28 +136,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pickImageButton" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <Button
-            android:id="@+id/pickImageButton"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/button_select_image"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="Button to Add Image"
+            android:src="@drawable/ic_camera"
+            android:backgroundTint="@color/app_blue"
+            app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@id/captureImageButton"
-            app:layout_constraintTop_toBottomOf="@+id/editContent" />
-
-        <Button
-            android:id="@+id/captureImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/ic_camera"
-            app:layout_constraintStart_toEndOf="@id/pickImageButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editContent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

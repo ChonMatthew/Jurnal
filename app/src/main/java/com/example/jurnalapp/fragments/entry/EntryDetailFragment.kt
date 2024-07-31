@@ -21,9 +21,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.jurnalapp.MainActivity
 import com.example.jurnalapp.R
+import com.example.jurnalapp.data.model.Entry
+import com.example.jurnalapp.data.viewmodel.EntryViewModel
 import com.example.jurnalapp.databinding.FragmentEntryDetailBinding
-import com.example.jurnalapp.model.Entry
-import com.example.jurnalapp.viewmodel.EntryViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

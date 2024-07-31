@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.jurnalapp.model.Entry
+import com.example.jurnalapp.data.model.Entry
 
 // Database class for the entity
 @Database(entities = [Entry::class], version = 1, exportSchema = false)

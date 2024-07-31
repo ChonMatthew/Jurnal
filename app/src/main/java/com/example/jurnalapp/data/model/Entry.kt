@@ -1,4 +1,4 @@
-package com.example.jurnalapp.model
+package com.example.jurnalapp.data.model
 
 import android.os.Parcelable
 import androidx.room.Entity

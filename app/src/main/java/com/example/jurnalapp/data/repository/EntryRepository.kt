@@ -1,11 +1,11 @@
-package com.example.jurnalapp.repository
+package com.example.jurnalapp.data.repository
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Environment
 import androidx.lifecycle.LiveData
 import com.example.jurnalapp.data.EntryDao
-import com.example.jurnalapp.model.Entry
+import com.example.jurnalapp.data.model.Entry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

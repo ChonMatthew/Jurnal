@@ -7,7 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.jurnalapp.model.Entry
+import com.example.jurnalapp.data.model.Entry
 import kotlinx.coroutines.flow.Flow
 
 // Data Access Objects for the Entry entity

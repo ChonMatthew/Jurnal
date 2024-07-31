@@ -9,9 +9,9 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.jurnalapp.R
+import com.example.jurnalapp.data.model.Entry
 import com.example.jurnalapp.databinding.CustomRowBinding
 import com.example.jurnalapp.fragments.search.SearchFragmentDirections
-import com.example.jurnalapp.model.Entry
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

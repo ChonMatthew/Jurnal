@@ -38,7 +38,7 @@
         android:label="Update Entry" >
         <argument
             android:name="currentEntry"
-            app:argType="com.example.jurnalapp.model.Entry" />
+            app:argType="com.example.jurnalapp.data.model.Entry" />
         <action
             android:id="@+id/action_updateFragment_to_entryDetailFragment"
             app:destination="@id/entryDetailFragment"
@@ -57,7 +57,7 @@
             app:destination="@id/listFragment" />
         <argument
             android:name="currentEntry"
-            app:argType="com.example.jurnalapp.model.Entry" />
+            app:argType="com.example.jurnalapp.data.model.Entry" />
         <argument
             android:name="isEntryUpdated"
             app:argType="boolean"
