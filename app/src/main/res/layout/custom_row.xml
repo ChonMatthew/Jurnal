@@ -24,7 +24,6 @@
                 android:id="@+id/rowImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher_background"
                 android:contentDescription="@string/description_row_image"
                 app:layout_constraintTop_toTopOf="parent"
                 android:scaleType="centerCrop"
