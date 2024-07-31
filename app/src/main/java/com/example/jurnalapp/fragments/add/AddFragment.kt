@@ -98,10 +98,10 @@ class AddFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                     lifecycleScope.launch(Dispatchers.IO) {
                         try {
                             val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
-                            var bitmap = ImageDecoder.decodeBitmap(source)
-                            bitmap = resizeBitmap(bitmap, 1000, 1000)
+                            selectedImageBitmap = ImageDecoder.decodeBitmap(source)
+                            selectedImageBitmap = resizeBitmap(selectedImageBitmap!!, 1000, 1000)
                             withContext(Dispatchers.Main) {
-                                binding.selectedImageView.setImageBitmap(bitmap)
+                                binding.selectedImageView.setImageBitmap(selectedImageBitmap)
                             }
                         } catch (e: Exception) {
                             Log.e("AddFragment", "Error decoding image: ", e)
