@@ -1,13 +1,17 @@
 package com.example.jurnalapp.fragments.entry
 
 import android.app.AlertDialog
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.MenuProvider
@@ -19,6 +23,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.jurnalapp.MainActivity
 import com.example.jurnalapp.R
 import com.example.jurnalapp.data.model.Entry
@@ -76,9 +82,14 @@ class EntryDetailFragment : Fragment() {
             if (imagePath.isNotEmpty()) {
                 Glide.with(this)
                     .load(imagePath)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE) // Consider disabling caching for testing
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .override(2050, 2050)
                     .into(binding.entryImageView)
+
+                // Set an onClickListener to open the image in a dialog
+                binding.entryImageView.setOnClickListener {
+                    showImageDialog(imagePath)
+                }
             } else {
                 binding.entryImageView.setImageDrawable(null)
             }
@@ -115,7 +126,7 @@ class EntryDetailFragment : Fragment() {
                             Glide.with(this)
                                 .load(imagePath)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .override(2050, 2050)
+                                .override(1000, 1000)
                                 .into(binding.entryImageView)
                         } else {
                             // Handle cases where there's no image
@@ -127,6 +138,43 @@ class EntryDetailFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun showImageDialog(imagePath: String) {
+        // Inflate the custom dialog layout
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_image_viewer, null)
+        val imageView = dialogView.findViewById<ImageView>(R.id.imageViewer)
+        val closeButton = dialogView.findViewById<Button>(R.id.closeButton)
+
+        // Load the image using Glide with resizing
+        Glide.with(this)
+            .load(imagePath)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .override(2400, 1400) // Resize to fit the dialog view
+            .into(imageView)
+
+        // Create the dialog
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        // Handle the button click to dismiss the dialog
+        closeButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        // Adjust the dialog window attributes to ensure it fills the screen
+        dialog.setOnShowListener {
+            val window = dialog.window
+            window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            window?.setBackgroundDrawableResource(android.R.color.black)
+        }
+
+        dialog.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

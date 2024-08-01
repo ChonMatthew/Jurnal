@@ -41,41 +41,77 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioGroup
-                android:id="@+id/themeRadioGroup"
+            <ToggleButton
+                android:id="@+id/themeGreen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#B5CFB7"
+                android:textOff="Green"
+                android:textOn="Green"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ThemeSelectText" />
+
+            <ToggleButton
+                android:id="@+id/themePurple"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#B692C2"
+                android:textOff="Purple"
+                android:textOn="Purple"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/themeGreen" />
+
+            <ToggleButton
+                android:id="@+id/themeBlue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#7FA1C3"
+                android:textOff="Blue"
+                android:textOn="Blue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/themePurple" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/settingsCardView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/innerConstraintLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/DeleteEntryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="Delete All Entries:"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ThemeSelectText">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <RadioButton
-                    android:id="@+id/themeGreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Green"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ThemeSelectText" />
-
-                <RadioButton
-                    android:id="@+id/themePurple"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Purple"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/themeLight" />
-
-                <RadioButton
-                    android:id="@+id/themeBlue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Blue"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/themeLight" />
-
-            </RadioGroup>
+            <Button
+                android:id="@+id/deleteAllEntriesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/app_red"
+                android:textColor="@color/white"
+                android:text="Delete"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/DeleteEntryText"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
