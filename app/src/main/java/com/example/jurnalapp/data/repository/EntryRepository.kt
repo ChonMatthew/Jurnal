@@ -18,12 +18,10 @@ class EntryRepository(private val entryDao: EntryDao) {
 
     suspend fun addEntry(entry: Entry) {
         entryDao.addEntry(entry)
-
     }
 
     suspend fun updateEntry(entry: Entry) {
         entryDao.updateEntry(entry)
-
     }
 
     suspend fun deleteEntry(entry: Entry) {
@@ -49,7 +47,6 @@ class EntryRepository(private val entryDao: EntryDao) {
             }
             imageFile.absolutePath // Return the absolute file path
         } catch (e: Exception) {
-            // Handle exceptions
             null
         }
         }

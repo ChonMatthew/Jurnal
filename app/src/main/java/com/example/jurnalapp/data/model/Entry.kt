@@ -17,3 +17,4 @@ data class Entry(
     val time: Long,
     val imagePath: String?
 ): Parcelable
+

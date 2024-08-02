@@ -39,15 +39,15 @@ class EntryViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun deleteEntry(entry: Entry) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteEntry(entry)
-        }
-    }
-
     fun deleteAllEntries() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteAllEntries()
+        }
+    }
+
+    fun deleteEntry(entry: Entry) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteEntry(entry)
         }
     }
 
